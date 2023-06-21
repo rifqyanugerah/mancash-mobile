@@ -26,8 +26,11 @@ public interface DatabaseDao {
     @Query("DELETE FROM tbl_keuangan WHERE uid= :uid and tipe = 'pengeluaran'")
     void deleteSinglePengeluaran(int uid);
 
-    @Query("SELECT (SELECT COALESCE(SUM(jml_uang), 0) FROM tbl_keuangan WHERE tipe = 'pemasukan') - (SELECT COALESCE(SUM(jml_uang), 0) FROM tbl_keuangan WHERE tipe = 'pengeluaran') AS saldo_pengeluaran")
+    @Query("SELECT SUM(jml_uang) FROM tbl_keuangan WHERE tipe = 'pengeluaran'")
     LiveData<Integer> getTotalPengeluaran();
+
+    @Query("SELECT (SELECT COALESCE(SUM(jml_uang), 0) FROM tbl_keuangan WHERE tipe = 'pemasukan') - (SELECT COALESCE(SUM(jml_uang), 0) FROM tbl_keuangan WHERE tipe = 'pengeluaran') AS saldo_pengeluaran")
+    LiveData<Integer> getTotalPengeluaranSaldo();
 
     @Query("UPDATE tbl_keuangan SET keterangan = :keterangan, tanggal = :tgl, jml_uang = :harga WHERE uid = :uid and tipe = 'pengeluaran'")
     void updateDataPengeluaran(String keterangan, String tgl, int harga, int uid);
